@@ -27,8 +27,6 @@
         console.warn('Failed to load external CSS, using fallback styles:', error);
         // 如果无法加载外部CSS，使用内联样式作为备用
         GM_addStyle(`
-            // 如果无法加载外部CSS，使用内联样式作为备用
-            GM_addStyle(`
                 /* 悬浮操作按钮 (FAB) */
                 #bfc-fab {
                     position: fixed;

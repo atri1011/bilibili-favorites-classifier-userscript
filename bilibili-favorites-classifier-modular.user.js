@@ -661,7 +661,7 @@
                 UIManager.log('收藏夹列表加载成功', 'success');
             } catch (error) {
                 UIManager.log(error.message, 'error');
-            }
+        },
 
         async start() {
             UIManager.log('开始分类任务...', 'info');
@@ -746,4 +746,3 @@
     App.init();
 
 })();
-        },
