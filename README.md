@@ -1,26 +1,5 @@
 # Bilibili 收藏夹 AI 分类助手 - 模块化版本
 
-[![Install](https://img.shields.io/badge/Install-Userscript-brightgreen?style=for-the-badge&logo=tampermonkey)](https://github.com/atri1011/bilibili-favorites-classifier-userscript/raw/main/bilibili-favorites-classifier-modular.user.js)
-
-## 🚀 快速安装
-
-### 一键安装（推荐）
-点击上方的 **Install** 按钮，或者直接点击下面的链接：
-
-**[📥 点击安装 - 完整模块化版本](https://github.com/atri1011/bilibili-favorites-classifier-userscript/raw/main/bilibili-favorites-classifier-modular.user.js)**
-
-**[📥 点击安装 - ES6模块版本（实验性）](https://github.com/atri1011/bilibili-favorites-classifier-userscript/raw/main/bilibili-favorites-classifier.user.js)**
-
-### 安装要求
-- 需要安装 [Tampermonkey](https://www.tampermonkey.net/) 或其他用户脚本管理器
-- 支持 Chrome、Firefox、Edge 等主流浏览器
-
-### 安装步骤
-1. 确保已安装 Tampermonkey 扩展
-2. 点击上方的安装链接
-3. 在弹出的页面中点击"安装"按钮
-4. 访问 [bilibili.com](https://www.bilibili.com) 开始使用
-
 ## 📁 项目结构
 
 ```
