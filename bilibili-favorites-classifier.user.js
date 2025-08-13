@@ -207,14 +207,7 @@
             `);
     }
 
-    // 动态导入模块并初始化应用
-    import('./main.js')
-        .then(({ App }) => {
-            App.init();
-        })
-        .catch(error => {
-            console.error('Failed to load modules:', error);
-            // 如果模块加载失败，可以在这里添加备用逻辑
-        });
+    // 注意：此版本需要外部模块文件，请使用模块化版本
+    console.error('此版本需要外部模块支持，请使用 bilibili-favorites-classifier-modular.user.js');
 
 })();
