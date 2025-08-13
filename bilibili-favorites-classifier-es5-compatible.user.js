@@ -792,6 +792,7 @@
                     }
 
                     var video = videos[index];
+                    var targetFolder = null; // 初始化targetFolder变量
                     
                     // 检查视频是否已在目标收藏夹之一
                     if (targetFolders.some(function(tf) { return tf.id === video.sourceMediaId; })) {
@@ -805,7 +806,7 @@
                         .then(function(predictedFolderName) {
                             UIManager.log('AI建议分类到: 「' + predictedFolderName + '」');
 
-                            var targetFolder = targetFolders.find(function(f) { return f.title === predictedFolderName; });
+                            targetFolder = targetFolders.find(function(f) { return f.title === predictedFolderName; });
                             if (targetFolder) {
                                 if (targetFolder.id === video.sourceMediaId) {
                                     UIManager.log('视频「' + video.title + '」已在「' + targetFolder.title + '」中，无需移动。', 'info');
