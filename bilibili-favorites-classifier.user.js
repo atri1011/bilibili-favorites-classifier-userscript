@@ -10,6 +10,8 @@
 // @grant        GM_xmlhttpRequest
 // @grant        GM_setValue
 // @grant        GM_getValue
+// @grant        GM_getResourceText
+// @resource     css ./style.css
 // @connect      *
 // @license      MIT
 // ==/UserScript==
@@ -18,10 +20,13 @@
     'use strict';
 
     // 注入CSS样式
-    fetch(new URL('./style.css', import.meta.url))
-        .then(response => response.text())
-        .then(css => GM_addStyle(css))
-        .catch(() => {
+    try {
+        const css = GM_getResourceText('css');
+        GM_addStyle(css);
+    } catch (error) {
+        console.warn('Failed to load external CSS, using fallback styles:', error);
+        // 如果无法加载外部CSS，使用内联样式作为备用
+        GM_addStyle(`
             // 如果无法加载外部CSS，使用内联样式作为备用
             GM_addStyle(`
                 /* 悬浮操作按钮 (FAB) */
@@ -202,7 +207,7 @@
                     cursor: not-allowed;
                 }
             `);
-        });
+    }
 
     // 动态导入模块并初始化应用
     import('./main.js')
