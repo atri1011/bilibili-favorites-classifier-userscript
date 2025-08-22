@@ -1,0 +1,78 @@
+<div id="bfc-panel">
+    <div class="bfc-panel-header">
+        <h2>AI分类助手</h2>
+        <div class="icons">
+            <span id="bfc-settings-toggle" title="设置">⚙️</span>
+            <span id="bfc-close-panel" title="关闭">❌</span>
+        </div>
+    </div>
+    <div id="bfc-settings-view" class="bfc-hidden">
+        <div class="bfc-form-group">
+            <label for="bfc-api-key">API Key</label>
+            <input type="password" id="bfc-api-key" class="bfc-input" placeholder="请输入你的API Key">
+        </div>
+        <div class="bfc-form-group">
+            <label for="bfc-api-host">API Host</label>
+            <input type="text" id="bfc-api-host" class="bfc-input" placeholder="例如: https://api.openai.com">
+        </div>
+        <div class="bfc-form-group">
+            <label for="bfc-ai-provider">AI 提供商</label>
+            <select id="bfc-ai-provider" class="bfc-select">
+                <option value="openai">OpenAI</option>
+                <option value="zhipu">智谱AI</option>
+            </select>
+        </div>
+         <div class="bfc-form-group">
+            <label for="bfc-model-select">AI 模型</label>
+            <select id="bfc-model-select" class="bfc-select">
+                <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
+                <option value="gpt-4">gpt-4</option>
+                <option value="gpt-4o">gpt-4o</option>
+                <option value="custom">自定义</option>
+            </select>
+        </div>
+        <div id="bfc-custom-model-group" class="bfc-form-group bfc-hidden">
+            <label for="bfc-custom-model">自定义模型名称</label>
+            <input type="text" id="bfc-custom-model" class="bfc-input" placeholder="请输入模型名称">
+        </div>
+        <button id="bfc-save-settings-btn" class="bfc-button">保存设置</button>
+
+        <div class="bfc-advanced-settings-toggle" style="margin-top: 15px; text-align: center;">
+            <a href="#" id="bfc-advanced-toggle-link" style="color: #00a1d6; text-decoration: none; font-size: 14px;">高级设置 ▼</a>
+        </div>
+
+        <div id="bfc-advanced-settings" class="bfc-hidden" style="margin-top: 15px;">
+            <div class="bfc-form-group">
+                <label for="bfc-custom-prompt">自定义Prompt模板</label>
+                <textarea id="bfc-custom-prompt" class="bfc-input" rows="8" style="height: auto; resize: vertical;" placeholder="使用占位符: {videoTitle}, {videoIntro}, {videoUpperName}, {folderList}"></textarea>
+                <small style="display: block; margin-top: 5px; color: #999;">占位符: {videoTitle}, {videoIntro}, {videoUpperName}, {folderList}</small>
+            </div>
+            <button id="bfc-restore-prompt-btn" class="bfc-button" style="background-color: #6c757d;">恢复默认Prompt</button>
+        </div>
+    </div>
+    <div class="bfc-panel-body" id="bfc-main-view">
+        <div class="bfc-form-group">
+            <label for="bfc-source-folders">选择源收藏夹 (可多选)</label>
+            <div id="bfc-source-folders" class="bfc-checkbox-group"></div>
+        </div>
+        <div class="bfc-form-group">
+            <label for="bfc-target-folders">选择目标收藏夹 (可多选)</label>
+            <div id="bfc-target-folders" class="bfc-checkbox-group"></div>
+        </div>
+        <div class="bfc-form-group">
+            <label for="batch-size-input">单次处理视频数</label>
+            <input type="number" id="batch-size-input" class="bfc-input" value="10">
+        </div>
+        <div class="bfc-action-buttons">
+            <button id="bfc-start-btn" class="bfc-button">开始分类</button>
+            <button id="bfc-pause-resume-btn" class="bfc-button bfc-hidden">暂停</button>
+            <button id="bfc-stop-btn" class="bfc-button bfc-button-danger bfc-hidden">停止</button>
+        </div>
+        <button id="bfc-batch-create-btn" class="bfc-button">一键创建推荐收藏夹</button>
+        <div id="bfc-log-controls"></div>
+        <div id="bfc-log" style="margin-top: 10px; height: 200px; overflow-y: scroll; background: #fff; border: 1px solid #e3e5e7; padding: 10px; border-radius: 6px;"></div>
+    </div>
+    <div class="bfc-panel-footer">
+        Made with ❤️ by Roo
+    </div>
+</div>

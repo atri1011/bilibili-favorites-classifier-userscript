@@ -1,0 +1,40 @@
+{
+  "name": "bilibili-favorites-classifier-userscript",
+  "version": "3.0.0",
+  "description": "[![Install](https://img.shields.io/badge/Install-Userscript-brightgreen?style=for-the-badge&logo=tampermonkey)](https://github.com/atri1011/bilibili-favorites-classifier-userscript/raw/main/bilibili-favorites-classifier.user.js) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)",
+  "main": "bilibili-favorites-classifier.user.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atri1011/bilibili-favorites-classifier-userscript.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/atri1011/bilibili-favorites-classifier-userscript/issues"
+  },
+  "homepage": "https://github.com/atri1011/bilibili-favorites-classifier-userscript#readme",
+  "devDependencies": {
+    "@babel/preset-env": "^7.28.3",
+    "@vitejs/plugin-vue": "^5.0.5",
+    "@vue/test-utils": "^2.4.6",
+    "@vue/vue3-jest": "^29.2.6",
+    "babel-jest": "^30.0.5",
+    "jest": "^30.0.5",
+    "jest-environment-jsdom": "^30.0.5",
+    "vite": "^5.3.1",
+    "vite-plugin-monkey": "^3.5.1",
+    "vue": "^3.4.29"
+  },
+  "dependencies": {
+    "chart.js": "^4.5.0",
+    "pinia": "^3.0.3",
+    "vue-chartjs": "^5.3.2"
+  }
+}

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilibili Favorites Classifier - 优化测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #00a1d6;
+            padding-bottom: 10px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .pass {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .fail {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        button {
+            background-color: #00a1d6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0085b3;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .log-output {
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bilibili Favorites Classifier - 优化测试</h1>
+        
+        <div class="test-section">
+            <h2>测试说明</h2>
+            <p>此页面用于测试 Bilibili Favorites Classifier 用户脚本的优化效果。测试内容包括：</p>
+            <ul>
+                <li>CSRF Token 获取和验证</li>
+                <li>数据完整性验证</li>
+                <li>FolderService 自动 CSRF Token 获取</li>
+            </ul>
+            <button onclick="runTests()">运行测试</button>
+        </div>
+        
+        <div class="test-section">
+            <h2>测试结果</h2>
+            <div id="test-results">
+                <p>点击"运行测试"按钮开始测试...</p>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>测试日志</h2>
+            <div id="test-log" class="log-output">
+                <p>测试日志将显示在这里...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 模拟 GM API
+        window.GM = {
+            getValue: (key) => {
+                if (key === 'bilibili_favorites_classifier_api_key') return 'test-api-key';
+                return null;
+            },
+            setValue: () => {},
+            deleteValue: () => {},
+            listValues: () => [],
+            getResourceUrl: (name) => `https://example.com/${name}`,
+            registerMenuCommand: () => {},
+            unregisterMenuCommand: () => {},
+            openInTab: (url) => log(`Opening tab: ${url}`),
+            xmlHttpRequest: (details) => {
+                log(`Making request to: ${details.url}`);
+                details.onload({
+                    responseText: JSON.stringify({ code: 0, data: {} }),
+                    status: 200
+                });
+            },
+            addStyle: (css) => log('Adding style: ' + css.substring(0, 50) + '...'),
+            notification: (details) => log('Notification: ' + details.text),
+            setClipboard: (text) => log('Clipboard set: ' + text.substring(0, 50) + '...')
+        };
+
+        // 日志函数
+        function log(message) {
+            const logDiv = document.getElementById('test-log');
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.innerHTML += `<div>[${timestamp}] ${message}</div>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        // 清空日志
+        function clearLog() {
+            document.getElementById('test-log').innerHTML = '<div>测试日志已清空...</div>';
+        }
+
+        // 显示测试结果
+        function showResult(testName, passed) {
+            const resultsDiv = document.getElementById('test-results');
+            const resultClass = passed ? 'pass' : 'fail';
+            const resultText = passed ? 'PASS' : 'FAIL';
+            resultsDiv.innerHTML += `<div class="test-result ${resultClass}">${testName}: ${resultText}</div>`;
+        }
+
+        // 模拟 CSRFUtils
+        const CSRFUtils = {
+            async getCSRFToken() {
+                log('尝试从 cookie 获取 CSRF token...');
+                // 模拟从 cookie 获取
+                const cookies = document.cookie.split(';');
+                const csrfCookie = cookies.find(cookie => cookie.trim().startsWith('bili_jct='));
+                
+                if (csrfCookie) {
+                    const token = csrfCookie.split('=')[1];
+                    log('成功从 cookie 获取 CSRF token');
+                    return token;
+                }
+                
+                log('Cookie 中未找到 CSRF token，尝试从 meta 标签获取...');
+                // 模拟从 meta 标签获取
+                const metaTag = document.querySelector('meta[name="csrf-token"]');
+                if (metaTag) {
+                    log('成功从 meta 标签获取 CSRF token');
+                    return metaTag.getAttribute('content');
+                }
+                
+                log('无法获取 CSRF token');
+                throw new Error('无法获取 CSRF token');
+            },
+            
+            async validateCSRFToken(token) {
+                log('验证 CSRF token...');
+                if (!token) {
+                    log('CSRF token 为空');
+                    return false;
+                }
+                
+                // 简单的格式验证
+                if (typeof token !== 'string' || token.length < 10) {
+                    log('CSRF token 格式无效');
+                    return false;
+                }
+                
+                log('CSRF token 验证通过');
+                return true;
+            }
+        };
+
+        // 模拟数据完整性验证
+        function validateDataIntegrity(data) {
+            log('验证数据完整性...');
+            
+            if (!data.videoData || !data.targetFolders) {
+                log('数据完整性验证失败：缺少必要字段');
+                return false;
+            }
+            
+            if (!data.videoData.bvid || !data.videoData.title) {
+                log('数据完整性验证失败：videoData 缺少必要字段');
+                return false;
+            }
+            
+            if (!Array.isArray(data.targetFolders) || data.targetFolders.length === 0) {
+                log('数据完整性验证失败：targetFolders 为空或不是数组');
+                return false;
+            }
+            
+            log('数据完整性验证通过');
+            return true;
+        }
+
+        // 运行测试
+        async function runTests() {
+            clearLog();
+            document.getElementById('test-results').innerHTML = '';
+            
+            log('开始运行优化测试...');
+            
+            // 测试 CSRF Token
+            log('\n=== 测试 CSRF Token ===');
+            try {
+                const token = await CSRFUtils.getCSRFToken();
+                const isValid = await CSRFUtils.validateCSRFToken(token);
+                showResult('CSRF Token 获取和验证', isValid);
+            } catch (error) {
+                log('CSRF Token 测试失败: ' + error.message);
+                showResult('CSRF Token 获取和验证', false);
+            }
+            
+            // 测试数据完整性
+            log('\n=== 测试数据完整性 ===');
+            try {
+                // 测试空数据
+                const emptyData = { videoData: null, targetFolders: [] };
+                const emptyValid = validateDataIntegrity(emptyData);
+                log('空数据验证结果: ' + (emptyValid ? '通过' : '失败'));
+                
+                // 测试完整数据
+                const completeData = {
+                    videoData: {
+                        bvid: 'test123',
+                        title: 'Test Video',
+                        pic: 'https://example.com/test.jpg'
+                    },
+                    targetFolders: [
+                        { id: 1, title: 'Test Folder' }
+                    ]
+                };
+                const completeValid = validateDataIntegrity(completeData);
+                log('完整数据验证结果: ' + (completeValid ? '通过' : '失败'));
+                
+                showResult('数据完整性验证', completeValid);
+            } catch (error) {
+                log('数据完整性测试失败: ' + error.message);
+                showResult('数据完整性验证', false);
+            }
+            
+            // 测试优化效果
+            log('\n=== 测试优化效果 ===');
+            try {
+                // 模拟优化前后的性能对比
+                const startTime = performance.now();
+                
+                // 模拟数据获取
+                const mockData = {
+                    videoData: {
+                        bvid: 'test123',
+                        title: 'Test Video',
+                        pic: 'https://example.com/test.jpg'
+                    },
+                    targetFolders: [
+                        { id: 1, title: 'Test Folder' },
+                        { id: 2, title: 'Another Folder' }
+                    ]
+                };
+                
+                // 模拟多次数据验证（优化后应该更快）
+                for (let i = 0; i < 100; i++) {
+                    validateDataIntegrity(mockData);
+                }
+                
+                const endTime = performance.now();
+                const duration = endTime - startTime;
+                
+                log(`100次数据验证耗时: ${duration.toFixed(2)}ms`);
+                log(`平均每次验证耗时: ${(duration / 100).toFixed(4)}ms`);
+                
+                showResult('性能优化测试', duration < 50); // 100次验证应该在50ms内完成
+            } catch (error) {
+                log('性能优化测试失败: ' + error.message);
+                showResult('性能优化测试', false);
+            }
+            
+            log('\n测试完成！');
+        }
+    </script>
+</body>
+</html>

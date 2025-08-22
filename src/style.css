@@ -1,0 +1,438 @@
+/* 悬浮操作按钮 (FAB) */
+#bfc-fab {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background-color: #fb7299; /* B站粉色 */
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 10000;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    opacity: 0.8;
+}
+
+#bfc-fab:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+#bfc-fab span {
+    font-size: 24px;
+    color: white;
+    transition: transform 0.3s ease;
+}
+
+
+body.bfc-settings-mode {
+    overflow: hidden; /* 防止背景滚动 */
+}
+
+/* 在设置模式下，隐藏B站的原有主要内容 */
+body.bfc-settings-mode .bili-header,
+body.bfc-settings-mode #app,
+body.bfc-settings-mode .bili-footer {
+    display: none !important;
+}
+
+#bfc-settings-view {
+    padding: 20px;
+    border-top: 1px solid #e3e5e7;
+    background-color: #fff;
+}
+
+.bfc-hidden {
+    display: none !important;
+}
+
+#bfc-panel {
+    display: none; /* 默认不显示 */
+    flex-direction: column;
+    background-color: #f4f5f7;
+}
+
+/* 设置页面模式下的样式 */
+body.bfc-settings-mode #bfc-panel {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99999;
+    overflow-y: auto;
+}
+
+.bfc-panel-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #e3e5e7;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.bfc-panel-header h2 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1a1a1a;
+}
+.bfc-panel-header .icons span {
+    font-size: 20px;
+    cursor: pointer;
+    margin-left: 15px;
+    color: #666;
+}
+
+.bfc-panel-body {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    }
+    
+    .bfc-tabs {
+        display: flex;
+        border-bottom: 1px solid #e3e5e7;
+        background-color: #fff;
+    }
+    
+    .bfc-tabs button {
+        padding: 10px 20px;
+        border: none;
+        background: none;
+        cursor: pointer;
+        font-size: 14px;
+        color: #666;
+        border-bottom: 2px solid transparent;
+    }
+    
+    .bfc-tabs button.active {
+        color: #fb7299;
+        border-bottom-color: #fb7299;
+    }
+    
+    .bfc-panel-footer {
+      padding: 15px 20px;
+      border-top: 1px solid #e3e5e7;
+    background-color: #fff;
+    font-size: 12px;
+    color: #999;
+}
+
+.bfc-form-group {
+    margin-bottom: 20px;
+}
+.bfc-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+.bfc-select, .bfc-input, .bfc-button {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.bfc-checkbox-group {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 10px;
+    height: 120px;
+    overflow-y: auto;
+}
+
+.bfc-checkbox-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.bfc-checkbox-item input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+.bfc-checkbox-item label {
+    font-weight: normal;
+    font-size: 14px;
+    cursor: pointer;
+    flex-grow: 1;
+}
+
+.bfc-button {
+    background-color: #fb7299;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.bfc-button:hover {
+    background-color: #e56a8a;
+}
+
+.bfc-action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.bfc-button-danger {
+    background-color: #dc3545;
+}
+.bfc-button-danger:hover {
+    background-color: #c82333;
+}
+
+.bfc-log-item {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+    font-size: 13px;
+}
+.bfc-log-item.success { color: #28a745; }
+.bfc-log-item.error { color: #dc3545; }
+.bfc-log-item.info { color: #17a2b8; }
+
+#bfc-batch-create-btn {
+    background-color: #00a1d6; /* B站蓝 */
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px; /* 与上一个按钮的间距 */
+    transition: background-color 0.3s, opacity 0.3s;
+}
+#bfc-batch-create-btn:hover {
+    background-color: #00b5e5;
+}
+#bfc-batch-create-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* 实时分类弹出窗口 */
+#bfc-popup {
+   position: fixed;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   width: 500px;
+   background-color: #fff;
+   border-radius: 8px;
+   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+   z-index: 10001;
+   padding: 15px;
+   font-size: 14px;
+   color: #333;
+   display: none; /* 默认隐藏 */
+   flex-direction: column;
+   gap: 10px;
+}
+#bfc-popup.show {
+   display: flex;
+}
+#bfc-popup-message {
+   font-weight: 500;
+}
+#bfc-popup-buttons {
+   display: flex;
+   justify-content: flex-end;
+   gap: 8px;
+}
+.bfc-popup-button {
+   padding: 5px 10px;
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   cursor: pointer;
+   background-color: #f4f5f7;
+}
+.bfc-popup-button.primary {
+   background-color: #fb7299;
+   color: white;
+   border-color: #fb7299;
+}
+#bfc-popup-collect-only {
+    background-color: #00a1d6;
+    color: white;
+    border-color: #00a1d6;
+}
+
+/* Results View */
+#bfc-results-view {
+    padding: 20px;
+    border-top: 1px solid #e3e5e7;
+    background-color: #fff;
+}
+
+.bfc-results-summary {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.bfc-chart-container {
+    width: 200px;
+    height: 200px;
+}
+
+.bfc-results-stats p {
+    margin: 5px 0;
+    font-size: 16px;
+}
+.bfc-results-stats .success { color: #28a745; }
+.bfc-results-stats .error { color: #dc3545; }
+.bfc-results-stats .info { color: #17a2b8; }
+
+.bfc-results-table-container {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #e3e5e7;
+    border-radius: 6px;
+}
+
+.bfc-results-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.bfc-results-table th,
+.bfc-results-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e3e5e7;
+}
+
+.bfc-results-table th {
+    background-color: #f4f5f7;
+    font-weight: 600;
+}
+
+.bfc-results-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.bfc-results-table a {
+    color: #00a1d6;
+    text-decoration: none;
+}
+.bfc-results-table a:hover {
+    text-decoration: underline;
+}
+
+/* Diagnose View */
+#bfc-diagnose-view p {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.6;
+}
+
+.bfc-progress-bar {
+    width: 100%;
+    height: 10px;
+    background-color: #e3e5e7;
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 10px 0;
+}
+
+.bfc-progress {
+    height: 100%;
+    background-color: #00a1d6;
+    transition: width 0.3s ease;
+}
+
+#bfc-diagnose-report {
+    margin-top: 20px;
+}
+
+.bfc-report-section {
+    margin-bottom: 20px;
+}
+
+.bfc-report-item {
+    background: #fff;
+    padding: 15px;
+    border: 1px solid #e3e5e7;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+.bfc-report-item ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin-top: 5px;
+    font-size: 13px;
+    color: #999;
+}
+#bfc-popup-favlist-container {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#bfc-popup-favlist-container label {
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+#bfc-favlist-select {
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  min-width: 150px;
+}
+/* Step Indicator */
+.bfc-steps-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+
+.bfc-step {
+    padding: 8px 16px;
+    border-radius: 20px;
+    background-color: #e3e5e7;
+    color: #999;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.bfc-step.active {
+    background-color: #fb7299;
+    color: white;
+}
+
+.bfc-step.completed {
+    background-color: #00a1d6;
+    color: white;
+}
+
+.bfc-step-line {
+    flex-grow: 1;
+    height: 2px;
+    background-color: #e3e5e7;
+    margin: 0 10px;
+}
+
+.step-description {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.bfc-step-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
