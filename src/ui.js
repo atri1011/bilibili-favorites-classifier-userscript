@@ -4,53 +4,77 @@ import App from './App.vue';
 import VideoPagePopup from './VideoPagePopup.vue';
 import FloatingRecommendation from './components/FloatingRecommendation.vue';
 import SideButton from './components/SideButton.vue';
+import ModalContainer from './components/ModalContainer.vue';
+import { useUIStore } from './stores/uiStore.js';
 
 const UIManager = {
     popupVM: null,
     appInstance: null, // 保存 Vue 应用实例
     floatingRecommendationVM: null, // 悬浮推荐组件实例
     sideButtonVM: null, // 侧边按钮组件实例
+    modalInstance: null, // 模态窗口实例
+    modalAppInstance: null, // 保存模态框的 Vue 应用实例
 
     init: function(isSettingsPage = false) {
-        if (isSettingsPage) {
-            this.injectVueApp();
-        } else {
+        // The settings page logic is now handled by the modal
+        if (!isSettingsPage) {
             this.injectFAB();
         }
     },
-    injectVueApp: function() {
-        // 检查是否已经挂载了应用
-        let appContainer = document.getElementById('bfc-app-container');
-        
-        // 如果已经存在应用实例，先卸载
-        if (this.appInstance) {
-            this.appInstance.unmount();
-            this.appInstance = null;
+
+    openAppInModal: function() {
+        if (this.modalInstance) {
+            return; // Modal is already open
         }
-        
-        // 如果已经存在容器，先移除
-        if (appContainer) {
-            appContainer.remove();
-        }
-        
-        // 创建新的容器
-        appContainer = document.createElement('div');
-        appContainer.id = 'bfc-app-container';
-        document.body.appendChild(appContainer);
-        
-        // 创建新的 Vue 应用实例，使用全局 Pinia 实例
-        const app = createApp(App);
+
+        const modalContainer = document.createElement('div');
+        modalContainer.id = 'bfc-modal-container';
+        document.body.appendChild(modalContainer);
+
         const pinia = window.__bfc_pinia || createPinia();
-        app.use(pinia);
-        this.appInstance = app.mount('#bfc-app-container');
+        const uiStore = useUIStore(pinia);
+
+        const uiManagerInstance = this;
+        const modalApp = createApp({
+            render() {
+                const { h } = Vue;
+                return h(ModalContainer, {
+                    onClose: () => uiManagerInstance.closeAppModal()
+                }, {
+                    default: () => h(App)
+                });
+            }
+        });
+        
+        modalApp.use(pinia);
+        this.modalAppInstance = modalApp;
+        this.modalInstance = modalApp.mount(modalContainer);
+        uiStore.openModal();
     },
+
+    closeAppModal: function() {
+        if (this.modalAppInstance) {
+            this.modalAppInstance.unmount();
+            this.modalAppInstance = null;
+            this.modalInstance = null;
+            const modalContainer = document.getElementById('bfc-modal-container');
+            if (modalContainer) {
+                document.body.removeChild(modalContainer);
+            }
+            const pinia = window.__bfc_pinia;
+            if (pinia) {
+                const uiStore = useUIStore(pinia);
+                uiStore.closeModal();
+            }
+        }
+    },
+
     injectFAB: function() {
         const fab = document.createElement('div');
         fab.id = 'bfc-fab';
         fab.innerHTML = '<span>AI</span>';
         fab.addEventListener('click', () => {
-            const cleanUrl = window.location.href.split('#')[0];
-            window.open(cleanUrl + '#bfc-settings', '_blank');
+            this.openAppInModal();
         });
         document.body.appendChild(fab);
     },

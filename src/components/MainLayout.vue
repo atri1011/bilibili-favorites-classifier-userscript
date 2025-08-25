@@ -16,18 +16,23 @@
 </template>
 
 <script>
-import { computed } from 'vue';
+import { computed, inject } from 'vue';
 import { useUIStore } from '../stores/index.js';
 
 export default {
   name: 'MainLayout',
   setup() {
     const uiStore = useUIStore();
+    const closeModal = inject('closeModal');
     
     const visible = computed(() => uiStore.isVisible);
     
     function closePanel() {
-      window.close();
+      if (closeModal) {
+        closeModal();
+      } else {
+        console.error('closeModal function not provided');
+      }
     }
     
     return {

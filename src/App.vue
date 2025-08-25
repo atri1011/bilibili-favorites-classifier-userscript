@@ -133,12 +133,12 @@ export default {
 
     // 生命周期钩子
     onMounted(async () => {
-      if (window.location.hash === '#bfc-settings') {
-        uiStore.setVisible(true);
-        await settingsService.loadSettings();
-        await initSettingsPage();
-        checkForUnfinishedTask();
-      }
+      // 在收藏夹页面，我们希望模态窗口一打开就加载数据
+      // 因此移除 window.location.hash 的检查
+      uiStore.setVisible(true);
+      await settingsService.loadSettings();
+      await initSettingsPage();
+      checkForUnfinishedTask();
     });
 
     // 初始化设置页面

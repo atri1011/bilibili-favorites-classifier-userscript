@@ -28,9 +28,7 @@ const App = {
         this.initPinia();
         
         
-        if (window.location.hash === '#bfc-settings') {
-            this.initSettingsPage();
-        } else if (window.location.href.includes('space.bilibili.com')) {
+        if (window.location.href.includes('space.bilibili.com')) {
             this.initSpacePage();
         } else if (window.location.href.includes('www.bilibili.com/video/')) {
             this.initVideoPageListeners();
@@ -54,12 +52,8 @@ const App = {
         window.__bfc_pinia = pinia;
     },
     
-    initSettingsPage: function() {
-        document.body.classList.add('bfc-settings-mode');
-        UIManager.init(true); // true 表示是设置页面
-    },
     initSpacePage: function() {
-        UIManager.init(false); // false 表示非设置页面
+        UIManager.init();
     },
     initVideoPageListeners: async function() {
         // 初始化悬浮推荐UI

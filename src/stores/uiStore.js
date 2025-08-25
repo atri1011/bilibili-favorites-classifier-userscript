@@ -6,7 +6,8 @@ export const useUIStore = defineStore('ui', {
     visible: false,
     activeTab: 'settings',
     mid: null,
-    analyticsData: []
+    analyticsData: [],
+    isModalOpen: false
   }),
   
   getters: {
@@ -38,6 +39,14 @@ export const useUIStore = defineStore('ui', {
     
     setMid(mid) {
       this.mid = mid;
+    },
+
+    openModal() {
+      this.isModalOpen = true;
+    },
+
+    closeModal() {
+      this.isModalOpen = false;
     },
     
     showPanel() {

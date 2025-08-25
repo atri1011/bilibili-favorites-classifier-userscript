@@ -436,3 +436,11 @@ body.bfc-settings-mode #bfc-panel {
     justify-content: space-between;
     margin-top: 20px;
 }
+/* 在模态窗口中强制显示面板 */
+#bfc-modal-container #bfc-panel {
+    display: flex;
+    position: relative; /* 覆盖 fixed 定位 */
+    width: 100%;
+    height: 100%;
+    z-index: auto; /* 移除不必要的 z-index */
+}
