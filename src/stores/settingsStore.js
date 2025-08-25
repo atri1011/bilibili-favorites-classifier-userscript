@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { GM } from '../utils/gmAdapter.js';
+import { AIAPI } from '../api.js';
 
 export const useSettingsStore = defineStore('settings', {
   state: () => ({
@@ -9,7 +10,10 @@ export const useSettingsStore = defineStore('settings', {
     apiModel: 'gpt-3.5-turbo',
     customApiModel: '',
     customPrompt: '',
-    advancedSettingsVisible: false
+    advancedSettingsVisible: false,
+    blurIntensity: 10,
+    availableModels: [],
+    modelsLoading: false
   }),
   
   getters: {
@@ -35,6 +39,7 @@ export const useSettingsStore = defineStore('settings', {
       this.apiModel = await GM.getValue('apiModel', 'gpt-3.5-turbo');
       this.customApiModel = await GM.getValue('customApiModel', '');
       this.customPrompt = await GM.getValue('customPrompt', '');
+      this.blurIntensity = await GM.getValue('blurIntensity', 10);
     },
     
     async saveSettings() {
@@ -51,6 +56,7 @@ export const useSettingsStore = defineStore('settings', {
         await GM.setValue('customApiModel', '');
       }
       await GM.setValue('customPrompt', this.customPrompt);
+      await GM.setValue('blurIntensity', this.blurIntensity);
       console.log('[BFC Debug] 设置保存完成');
     },
     
@@ -69,6 +75,28 @@ export const useSettingsStore = defineStore('settings', {
 {folderList}
 
 请仅返回最合适的收藏夹的名称，不要添加任何多余的解释或标点符号。`;
+    },
+    
+    async fetchModels() {
+      if (!this.apiKey || !this.apiHost) {
+        alert('请先设置 API Key 和 API Host');
+        return;
+      }
+      this.modelsLoading = true;
+      this.availableModels = [];
+      try {
+        const models = await AIAPI.getModels(this.apiHost, this.apiKey);
+        const modelIds = models.map(model => model.id).sort();
+        
+        // 强制响应式更新
+        this.availableModels.length = 0;
+        modelIds.forEach(id => this.availableModels.push(id));
+      } catch (error) {
+        console.error('获取AI模型列表失败:', error);
+        alert(`获取模型列表失败: ${error.message}`);
+      } finally {
+        this.modelsLoading = false;
+      }
     }
   }
 });

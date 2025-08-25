@@ -53,8 +53,8 @@ export default {
 .bfc-log-panel {
   height: 200px;
   overflow-y: scroll;
-  background: #fff;
-  border: 1px solid #e3e5e7;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   padding: 10px;
   border-radius: 6px;
 }

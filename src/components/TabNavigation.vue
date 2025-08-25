@@ -12,6 +12,12 @@
     >
       批量分类
     </button>
+    <button
+      :class="{ active: activeTab === 'beautify' }"
+      @click="switchToBeautifyTab"
+    >
+      美化
+    </button>
   </div>
 </template>
 
@@ -33,12 +39,17 @@ export default {
     function switchToClassifyTab() {
       uiStore.switchToClassifyTab();
     }
+
+    function switchToBeautifyTab() {
+      uiStore.switchToBeautifyTab();
+    }
     
     
     return {
       activeTab,
       switchToSettingsTab,
       switchToClassifyTab,
+      switchToBeautifyTab,
     };
   }
 };

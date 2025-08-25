@@ -51,7 +51,7 @@
     </div>
 
     <div id="bfc-log-controls"></div>
-    <div id="bfc-log" ref="logContainer" style="margin-top: 10px; height: 200px; overflow-y: scroll; background: #fff; border: 1px solid #e3e5e7; padding: 10px; border-radius: 6px;">
+    <div id="bfc-log" ref="logContainer" style="margin-top: 10px; height: 200px; overflow-y: scroll; background: transparent; border: 1px solid rgba(255, 255, 255, 0.2); padding: 10px; border-radius: 6px;">
       <div v-for="(log, index) in logs" :key="index" :class="['bfc-log-item', log.type]">{{ log.message }}</div>
     </div>
   </div>

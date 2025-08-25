@@ -43,7 +43,7 @@ body.bfc-settings-mode .bili-footer {
 #bfc-settings-view {
     padding: 20px;
     border-top: 1px solid #e3e5e7;
-    background-color: #fff;
+    background-color: transparent;
 }
 
 .bfc-hidden {
@@ -53,7 +53,7 @@ body.bfc-settings-mode .bili-footer {
 #bfc-panel {
     display: none; /* 默认不显示 */
     flex-direction: column;
-    background-color: #f4f5f7;
+    background-color: transparent;
 }
 
 /* 设置页面模式下的样式 */
@@ -97,7 +97,7 @@ body.bfc-settings-mode #bfc-panel {
     .bfc-tabs {
         display: flex;
         border-bottom: 1px solid #e3e5e7;
-        background-color: #fff;
+        background-color: transparent;
     }
     
     .bfc-tabs button {
@@ -118,7 +118,7 @@ body.bfc-settings-mode #bfc-panel {
     .bfc-panel-footer {
       padding: 15px 20px;
       border-top: 1px solid #e3e5e7;
-    background-color: #fff;
+    background-color: transparent;
     font-size: 12px;
     color: #999;
 }
@@ -143,8 +143,8 @@ body.bfc-settings-mode #bfc-panel {
 }
 
 .bfc-checkbox-group {
-    background-color: #fff;
-    border: 1px solid #ccc;
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 6px;
     padding: 10px;
     height: 120px;
@@ -268,7 +268,7 @@ body.bfc-settings-mode #bfc-panel {
 #bfc-results-view {
     padding: 20px;
     border-top: 1px solid #e3e5e7;
-    background-color: #fff;
+    background-color: transparent;
 }
 
 .bfc-results-summary {
@@ -358,9 +358,9 @@ body.bfc-settings-mode #bfc-panel {
 }
 
 .bfc-report-item {
-    background: #fff;
+    background: transparent;
     padding: 15px;
-    border: 1px solid #e3e5e7;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 6px;
     margin-bottom: 10px;
 }

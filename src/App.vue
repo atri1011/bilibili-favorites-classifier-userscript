@@ -47,11 +47,13 @@
       @close-results="closeResultsView"
     />
 
+    <BeautifyView v-show="activeTab === 'beautify'" />
+
   </MainLayout>
 </template>
 
 <script>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import { provideAppServices } from './utils/provideInject.js';
 import { useSettingsStore } from './stores/index.js';
 import { useClassificationStore } from './stores/index.js';
@@ -65,6 +67,7 @@ import LogPanel from './components/LogPanel.vue';
 import SettingsView from './components/SettingsView.vue';
 import ClassifyView from './components/ClassifyView.vue';
 import ResultsView from './components/ResultsView.vue';
+import BeautifyView from './components/BeautifyView.vue';
 
 
 export default {
@@ -76,6 +79,7 @@ export default {
     SettingsView,
     ClassifyView,
     ResultsView,
+    BeautifyView,
   },
   setup() {
     // 提供服务和store给子组件
@@ -91,6 +95,7 @@ export default {
     const activeTab = computed(() => uiStore.currentTab);
     const settings = computed(() => settingsStore);
     const advancedSettingsVisible = computed(() => settingsStore.advancedSettingsVisible);
+    const blurIntensity = computed(() => settingsStore.blurIntensity);
     const allFolders = computed(() => classificationStore.allFolders);
     const selectedSourceFolders = computed(() => classificationStore.selectedSourceFolders);
     const selectedTargetFolders = computed(() => classificationStore.selectedTargetFolders);
@@ -114,7 +119,17 @@ export default {
       await settingsService.loadSettings();
       await initSettingsPage();
       checkForUnfinishedTask();
+      updateBlurEffect(blurIntensity.value);
     });
+
+    // 监听模糊度变化并更新CSS变量
+    watch(blurIntensity, (newValue) => {
+      updateBlurEffect(newValue);
+    });
+
+    function updateBlurEffect(value) {
+      document.documentElement.style.setProperty('--blur-intensity', `${value}px`);
+    }
 
     // 初始化设置页面
     async function initSettingsPage() {

@@ -2,6 +2,15 @@ import { retry } from './utils.js';
 import { GM_xmlhttpRequest, CSRFUtils } from './utils/gmAdapter.js';
 
 async function handleResponse(response) {
+    if (!response.ok) {
+        try {
+            const errorData = await response.json();
+            const errorMessage = errorData.error?.message || JSON.stringify(errorData);
+            throw new Error(`请求失败 (状态 ${response.status}): ${errorMessage}`);
+        } catch (e) {
+            throw new Error(`请求失败: ${response.status} ${response.statusText}`);
+        }
+    }
     const contentType = response.headers.get('content-type');
     if (contentType && contentType.includes('application/json')) {
         return response.json();
@@ -242,4 +251,42 @@ const BilibiliAPI = {
             });
     }
 };
+
+const AIAPI = {
+    getModels: function(apiHost, apiKey) {
+        const url = new URL('/v1/models', apiHost).toString();
+        return new Promise((resolve, reject) => {
+            GM_xmlhttpRequest({
+                method: 'GET',
+                url: url,
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`
+                },
+                onload: response => {
+                    try {
+                        if (response.status >= 200 && response.status < 300) {
+                            const data = JSON.parse(response.responseText);
+                            // 支持 { "data": [...] } (OpenAI 格式) 和 [...] (直接数组) 两种格式
+                            if (data && Array.isArray(data.data)) {
+                                resolve(data.data);
+                            } else if (Array.isArray(data)) {
+                                resolve(data);
+                            } else {
+                                reject(new Error('获取模型列表失败: 响应数据格式不正确'));
+                            }
+                        } else {
+                            reject(new Error(`请求失败: ${response.status} ${response.statusText}`));
+                        }
+                    } catch (e) {
+                        reject(new Error('解析响应失败: ' + e.message));
+                    }
+                },
+                onerror: () => reject(new Error('网络请求失败'))
+            });
+        });
+    }
+};
+
 export default BilibiliAPI;
+export { AIAPI };

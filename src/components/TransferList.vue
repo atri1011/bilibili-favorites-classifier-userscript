@@ -120,7 +120,8 @@ export default {
 }
 .transfer-list-panel {
   width: 45%;
-  border: 1px solid #e3e5e7;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: transparent;
   border-radius: 6px;
   height: 300px;
   display: flex;
@@ -128,8 +129,8 @@ export default {
 }
 .transfer-list-header {
   padding: 8px 12px;
-  background-color: #f4f5f7;
-  border-bottom: 1px solid #e3e5e7;
+  background-color: transparent;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -163,7 +164,7 @@ export default {
   border-radius: 4px;
 }
 .transfer-list-items li:hover {
-  background-color: #e3f2fd;
+  background-color: rgba(255, 255, 255, 0.1);
 }
 .transfer-list-items li.selected {
   background-color: #bbdefb;

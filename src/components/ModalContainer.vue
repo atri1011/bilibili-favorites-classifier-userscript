@@ -41,7 +41,8 @@ export default {
 }
 
 .modal-content {
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.3); /* 修改：降低不透明度以增强毛玻璃效果 */
+  backdrop-filter: blur(var(--blur-intensity));
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
@@ -70,7 +71,7 @@ export default {
 
 @media (prefers-color-scheme: dark) {
   .modal-content {
-    background-color: #2d2d2d;
+    background-color: rgba(30, 30, 30, 0.5); /* 修改：同步调整暗色模式下的透明度 */
     color: #f0f0f0;
   }
   .modal-close-button {

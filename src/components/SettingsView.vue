@@ -25,9 +25,30 @@
         <option value="custom">自定义</option>
       </select>
     </div>
-    <div id="bfc-custom-model-group" class="bfc-form-group" :class="{ 'bfc-hidden': settings.apiModel !== 'custom' }">
-      <label for="bfc-custom-model">自定义模型名称</label>
-      <input type="text" id="bfc-custom-model" class="bfc-input" placeholder="请输入模型名称" :value="settings.customApiModel" @input="$emit('update:settings', { ...settings, customApiModel: $event.target.value })">
+    <div id="bfc-custom-model-group" class="bfc-form-group" :class="{ 'bfc-hidden': settings.apiModel !== 'custom' }" style="position: relative;">
+      <label for="bfc-custom-model">自定义模型名称 <span v-if="settingsStore.modelsLoading">(加载中...)</span></label>
+      <input
+        type="text"
+        id="bfc-custom-model"
+        class="bfc-input"
+        placeholder="点击获取或输入模型名称"
+        :value="settings.customApiModel"
+        @input="handleInput"
+        @focus="handleFocus"
+        @blur="handleBlur"
+        :disabled="settingsStore.modelsLoading"
+        autocomplete="off"
+      >
+      <div v-if="isDropdownVisible && displayedModels.length > 0" class="bfc-model-dropdown">
+        <div
+          v-for="model in displayedModels"
+          :key="model"
+          class="bfc-model-dropdown-item"
+          @mousedown="selectModel(model)"
+        >
+          {{ model }}
+        </div>
+      </div>
     </div>
     <div class="bfc-advanced-settings-toggle" style="margin-top: 15px; text-align: center;">
       <a href="#" id="bfc-advanced-toggle-link" @click.prevent="$emit('toggle-advanced')" style="color: #00a1d6; text-decoration: none; font-size: 14px;">
@@ -46,19 +67,102 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'SettingsView',
-  props: {
-    settings: {
-      type: Object,
-      required: true
-    },
-    advancedSettingsVisible: {
-      type: Boolean,
-      required: true
-    }
+<script setup>
+import { ref } from 'vue';
+import { useSettingsStore } from '../stores/settingsStore.js';
+
+const props = defineProps({
+  settings: {
+    type: Object,
+    required: true
   },
-  emits: ['update:settings', 'save-settings', 'toggle-advanced', 'restore-prompt']
+  advancedSettingsVisible: {
+    type: Boolean,
+    required: true
+  }
+});
+
+const emit = defineEmits(['update:settings', 'save-settings', 'toggle-advanced', 'restore-prompt']);
+
+const settingsStore = useSettingsStore();
+const isDropdownVisible = ref(false);
+const displayedModels = ref([]);
+
+const handleFocus = () => {
+  isDropdownVisible.value = true;
+  // On focus, always show the full list.
+  displayedModels.value = settingsStore.availableModels;
+
+  // Fetch if the list is empty.
+  if (settingsStore.availableModels.length === 0 && !settingsStore.modelsLoading) {
+    settingsStore.fetchModels().then(() => {
+      // After fetching, update the displayed list again.
+      displayedModels.value = settingsStore.availableModels;
+    });
+  }
+};
+
+const handleBlur = () => {
+  // Delay hiding to allow click event on dropdown items
+  setTimeout(() => {
+    isDropdownVisible.value = false;
+  }, 200);
+};
+
+const handleInput = (event) => {
+  const searchTerm = event.target.value;
+  emit('update:settings', { ...props.settings, customApiModel: searchTerm });
+
+  const trimmedSearch = searchTerm.trim().toLowerCase();
+  if (!trimmedSearch) {
+    displayedModels.value = settingsStore.availableModels;
+  } else {
+    displayedModels.value = settingsStore.availableModels.filter(model =>
+      model.toLowerCase().includes(trimmedSearch)
+    );
+  }
+  isDropdownVisible.value = true; // Keep dropdown open while typing
+};
+
+const selectModel = (model) => {
+  emit('update:settings', { ...props.settings, customApiModel: model });
+  isDropdownVisible.value = false;
 };
 </script>
+
+<style scoped>
+.bfc-model-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  max-height: 150px;
+  overflow-y: auto;
+  
+  /* Aether Design Philosophy: Frosted Glass Effect */
+  background-color: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(var(--blur-intensity, 8px));
+  -webkit-backdrop-filter: blur(var(--blur-intensity, 8px)); /* Safari support */
+  
+  /* Aether Design Philosophy: Universal Softness */
+  border-radius: 0.75rem; /* equivalent to rounded-2xl */
+  
+  /* Aether Design Philosophy: Depth & Hierarchy */
+  border: 1px solid rgba(209, 213, 219, 0.3);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+.bfc-model-dropdown-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  text-align: left;
+  color: #1f2937; /* Darker text for better readability on blurred background */
+  transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bfc-model-dropdown-item:hover {
+  /* Aether Design Philosophy: Light Interaction */
+  background-color: rgba(255, 255, 255, 0.5);
+}
+</style>

@@ -64,5 +64,9 @@ export const useUIStore = defineStore('ui', {
       this.activeTab = 'classify';
     },
     
+    switchToBeautifyTab() {
+      this.activeTab = 'beautify';
+    },
+    
   }
 });
