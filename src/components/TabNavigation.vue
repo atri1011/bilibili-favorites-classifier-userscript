@@ -12,18 +12,6 @@
     >
       批量分类
     </button>
-    <button 
-      :class="{ active: activeTab === 'diagnose' }" 
-      @click="switchToDiagnoseTab"
-    >
-      智能诊断
-    </button>
-    <button 
-      :class="{ active: activeTab === 'analytics' }" 
-      @click="switchToAnalyticsTab"
-    >
-      数据分析
-    </button>
   </div>
 </template>
 
@@ -46,20 +34,11 @@ export default {
       uiStore.switchToClassifyTab();
     }
     
-    function switchToDiagnoseTab() {
-      uiStore.switchToDiagnoseTab();
-    }
-    
-    function switchToAnalyticsTab() {
-      uiStore.switchToAnalyticsTab();
-    }
     
     return {
       activeTab,
       switchToSettingsTab,
       switchToClassifyTab,
-      switchToDiagnoseTab,
-      switchToAnalyticsTab
     };
   }
 };

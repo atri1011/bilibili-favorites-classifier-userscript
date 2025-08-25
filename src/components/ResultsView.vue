@@ -2,9 +2,6 @@
   <div id="bfc-results-view">
     <h3>分类结果</h3>
     <div class="bfc-results-summary">
-      <div class="bfc-chart-container">
-        <Doughnut v-if="chartData" :data="chartData" />
-      </div>
       <div class="bfc-results-stats">
         <p><strong>总计:</strong> {{ classificationResults.length }} 个视频</p>
         <p class="success"><strong>成功:</strong> {{ summary.success }}</p>
@@ -45,16 +42,9 @@
 
 <script>
 import { ref, watch } from 'vue';
-import { Doughnut } from 'vue-chartjs';
-import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale } from 'chart.js';
-
-ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
 
 export default {
   name: 'ResultsView',
-  components: {
-    Doughnut
-  },
   props: {
     classificationResults: {
       type: Array,

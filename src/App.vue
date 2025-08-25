@@ -36,16 +36,6 @@
       <LogPanel />
     </ClassifyView>
 
-    <DiagnoseView
-      v-show="activeTab === 'diagnose'"
-      :diagnosis-state="diagnosisState"
-      :diagnosis-report="diagnosisReport"
-      @update:diagnosisReport="updateDiagnosisReport"
-      @start-diagnosis="startDiagnosis"
-      @apply-diagnosis="applyDiagnosis"
-    >
-      <LogPanel />
-    </DiagnoseView>
 
     <ResultsView
       v-if="resultsVisible"
@@ -57,47 +47,35 @@
       @close-results="closeResultsView"
     />
 
-    <AnalyticsView
-      v-show="activeTab === 'analytics'"
-    />
   </MainLayout>
 </template>
 
 <script>
 import { ref, onMounted, computed } from 'vue';
-import { Doughnut } from 'vue-chartjs';
-import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale } from 'chart.js';
 import { provideAppServices } from './utils/provideInject.js';
 import { useSettingsStore } from './stores/index.js';
 import { useClassificationStore } from './stores/index.js';
-import { useDiagnosisStore } from './stores/index.js';
 import { useUIStore } from './stores/index.js';
 import { useFloatingRecommendationStore } from './stores/index.js';
-import { settingsService, classificationService, diagnosisService, folderService } from './services/index.js';
+import { settingsService, classificationService, folderService } from './services/index.js';
 import BatchCreator from './batch-creator.js';
 import MainLayout from './components/MainLayout.vue';
 import TabNavigation from './components/TabNavigation.vue';
 import LogPanel from './components/LogPanel.vue';
 import SettingsView from './components/SettingsView.vue';
 import ClassifyView from './components/ClassifyView.vue';
-import DiagnoseView from './components/DiagnoseView.vue';
 import ResultsView from './components/ResultsView.vue';
-import AnalyticsView from './components/AnalyticsView.vue';
 
-ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
 
 export default {
   name: 'App',
   components: {
-    Doughnut,
     MainLayout,
     TabNavigation,
     LogPanel,
     SettingsView,
     ClassifyView,
-    DiagnoseView,
     ResultsView,
-    AnalyticsView
   },
   setup() {
     // 提供服务和store给子组件
@@ -106,7 +84,6 @@ export default {
     // 使用stores
     const settingsStore = useSettingsStore();
     const classificationStore = useClassificationStore();
-    const diagnosisStore = useDiagnosisStore();
     const uiStore = useUIStore();
 
     // 计算属性
@@ -126,8 +103,6 @@ export default {
     const classificationResults = computed(() => classificationStore.classificationResults);
     const chartData = computed(() => classificationStore.chartData);
     const currentStep = computed(() => classificationStore.currentStep);
-    const diagnosisState = computed(() => diagnosisStore.diagnosisState);
-    const diagnosisReport = computed(() => diagnosisStore.diagnosisReport);
     const taskSummary = computed(() => classificationStore.taskSummary);
     const availableTargetFolders = computed(() => classificationStore.availableTargetFolders);
 
@@ -227,18 +202,6 @@ export default {
       classificationService.closeResultsView();
     }
 
-    // 诊断相关方法
-    function startDiagnosis() {
-      diagnosisService.startDiagnosis();
-    }
-
-    function applyDiagnosis() {
-      diagnosisService.applyDiagnosis();
-    }
-
-    function updateDiagnosisReport(report) {
-      diagnosisStore.setDiagnosisReport(report);
-    }
 
     // 批量创建
     function batchCreate() {
@@ -262,8 +225,6 @@ export default {
       classificationResults,
       chartData,
       currentStep,
-      diagnosisState,
-      diagnosisReport,
       taskSummary,
       availableTargetFolders,
       updateSettings,
@@ -281,9 +242,6 @@ export default {
       nextStep,
       applyCorrections,
       closeResultsView,
-      startDiagnosis,
-      applyDiagnosis,
-      updateDiagnosisReport,
       batchCreate
     };
   }

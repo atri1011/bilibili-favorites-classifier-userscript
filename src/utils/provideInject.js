@@ -1,17 +1,14 @@
 import { provide, inject } from 'vue';
-import { settingsService, classificationService, diagnosisService, analyticsService, folderService } from '../services/index.js';
-import { useSettingsStore, useClassificationStore, useDiagnosisStore, useUIStore } from '../stores/index.js';
+import { settingsService, classificationService, folderService } from '../services/index.js';
+import { useSettingsStore, useClassificationStore, useUIStore } from '../stores/index.js';
 import eventBus from './eventBus.js';
 
 // 定义注入键
 export const SettingsServiceKey = Symbol('settingsService');
 export const ClassificationServiceKey = Symbol('classificationService');
-export const DiagnosisServiceKey = Symbol('diagnosisService');
-export const AnalyticsServiceKey = Symbol('analyticsService');
 export const FolderServiceKey = Symbol('folderService');
 export const SettingsStoreKey = Symbol('settingsStore');
 export const ClassificationStoreKey = Symbol('classificationStore');
-export const DiagnosisStoreKey = Symbol('diagnosisStore');
 export const UIStoreKey = Symbol('uiStore');
 export const EventBusKey = Symbol('eventBus');
 
@@ -19,12 +16,9 @@ export const EventBusKey = Symbol('eventBus');
 export function provideAppServices() {
   provide(SettingsServiceKey, settingsService);
   provide(ClassificationServiceKey, classificationService);
-  provide(DiagnosisServiceKey, diagnosisService);
-  provide(AnalyticsServiceKey, analyticsService);
   provide(FolderServiceKey, folderService);
   provide(SettingsStoreKey, useSettingsStore());
   provide(ClassificationStoreKey, useClassificationStore());
-  provide(DiagnosisStoreKey, useDiagnosisStore());
   provide(UIStoreKey, useUIStore());
   provide(EventBusKey, eventBus);
 }
@@ -38,13 +32,6 @@ export function useClassificationService() {
   return inject(ClassificationServiceKey);
 }
 
-export function useDiagnosisService() {
-  return inject(DiagnosisServiceKey);
-}
-
-export function useAnalyticsService() {
-  return inject(AnalyticsServiceKey);
-}
 
 export function useFolderService() {
   return inject(FolderServiceKey);
@@ -59,9 +46,6 @@ export function useClassificationStoreInject() {
   return inject(ClassificationStoreKey);
 }
 
-export function useDiagnosisStoreInject() {
-  return inject(DiagnosisStoreKey);
-}
 
 export function useUIStoreInject() {
   return inject(UIStoreKey);
