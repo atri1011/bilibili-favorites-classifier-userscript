@@ -17,6 +17,8 @@
 // @require      https://cdn.jsdelivr.net/npm/systemjs@6.15.1/dist/system.min.js
 // @require      https://cdn.jsdelivr.net/npm/systemjs@6.15.1/dist/extras/named-register.min.js
 // @require      data:application/javascript,%3B(typeof%20System!%3D'undefined')%26%26(System%3Dnew%20System.constructor())%3B
+// @connect      api.bilibili.com
+// @connect      open.bigmodel.cn
 // @connect      *
 // @grant        GM.deleteValue
 // @grant        GM.getValue
@@ -35,12 +37,15 @@ System.addImportMap({ imports: {"pinia":"user:pinia","vue":"user:vue"} });
 System.set("user:pinia", (()=>{const _=Pinia;('default' in _)||(_.default=_);return _})());
 System.set("user:vue", (()=>{const _=Vue;('default' in _)||(_.default=_);return _})());
 
-System.register("./__entry.js", ['vue', 'pinia'], (function (exports, module) {
+System.register("./__entry.js", ['pinia', 'vue'], (function (exports, module) {
   'use strict';
-  var createApp, createElementBlock, createCommentVNode, openBlock, normalizeClass, createElementVNode, toDisplayString, withDirectives, Fragment, renderList, vModelSelect, ref, computed, watch, withModifiers, renderSlot, provide, resolveComponent, createBlock, withCtx, createVNode, vShow, onMounted, vModelText, createTextVNode, nextTick, unref, inject, defineStore, createPinia;
+  var defineStore, createPinia, createApp$1, createElementBlock, createCommentVNode, openBlock, normalizeClass, createElementVNode, toDisplayString, withDirectives, Fragment, renderList, vModelSelect, ref, computed, watch, withModifiers, renderSlot, provide, resolveComponent, createBlock, withCtx, createVNode, vShow, onMounted, vModelText, createTextVNode, nextTick, unref, inject;
   return {
     setters: [module => {
-      createApp = module.createApp;
+      defineStore = module.defineStore;
+      createPinia = module.createPinia;
+    }, module => {
+      createApp$1 = module.createApp;
       createElementBlock = module.createElementBlock;
       createCommentVNode = module.createCommentVNode;
       openBlock = module.openBlock;
@@ -68,9 +73,6 @@ System.register("./__entry.js", ['vue', 'pinia'], (function (exports, module) {
       nextTick = module.nextTick;
       unref = module.unref;
       inject = module.inject;
-    }, module => {
-      defineStore = module.defineStore;
-      createPinia = module.createPinia;
     }],
     execute: (function () {
 
@@ -774,6 +776,15 @@ System.register("./__entry.js", ['vue', 'pinia'], (function (exports, module) {
           forceReclassify: false,
           taskRunning: false,
           isPaused: false,
+          isStopped: false,
+          status: "idle",
+          // idle, running, paused, stopped
+          summary: {
+            success: 0,
+            skipped: 0,
+            failed: 0,
+            failedItems: []
+          },
           logs: [],
           resultsVisible: false,
           classificationResults: [],
@@ -3320,7 +3331,7 @@ System.register("./__entry.js", ['vue', 'pinia'], (function (exports, module) {
           _: 1
         });
       }
-      const App$1 = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["render", _sfc_render$4]]);
+      const App = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["render", _sfc_render$4]]);
       const _sfc_main$3 = {
         name: "VideoPagePopup",
         data() {
@@ -3787,13 +3798,13 @@ System.register("./__entry.js", ['vue', 'pinia'], (function (exports, module) {
           const pinia2 = window.__bfc_pinia || createPinia();
           const uiStore = useUIStore(pinia2);
           const uiManagerInstance = this;
-          const modalApp = createApp({
+          const modalApp = createApp$1({
             render() {
               const { h } = Vue;
               return h(ModalContainer, {
                 onClose: () => uiManagerInstance.closeAppModal()
               }, {
-                default: () => h(App$1)
+                default: () => h(App)
               });
             }
           });
@@ -3841,10 +3852,10 @@ System.register("./__entry.js", ['vue', 'pinia'], (function (exports, module) {
           popupContainer = document.createElement("div");
           popupContainer.id = "bfc-popup-container";
           document.body.appendChild(popupContainer);
-          const app = createApp(VideoPagePopup, {});
+          const app2 = createApp$1(VideoPagePopup, {});
           const pinia2 = window.__bfc_pinia || createPinia();
-          app.use(pinia2);
-          this.popupVM = app.mount(popupContainer);
+          app2.use(pinia2);
+          this.popupVM = app2.mount(popupContainer);
         },
         initFloatingRecommendationUI: function() {
           let floatingContainer = document.getElementById("bfc-floating-recommendation-container");
@@ -3858,10 +3869,10 @@ System.register("./__entry.js", ['vue', 'pinia'], (function (exports, module) {
           floatingContainer = document.createElement("div");
           floatingContainer.id = "bfc-floating-recommendation-container";
           document.body.appendChild(floatingContainer);
-          const app = createApp(FloatingRecommendation);
+          const app2 = createApp$1(FloatingRecommendation);
           const pinia2 = window.__bfc_pinia || createPinia();
-          app.use(pinia2);
-          this.floatingRecommendationVM = app.mount(floatingContainer);
+          app2.use(pinia2);
+          this.floatingRecommendationVM = app2.mount(floatingContainer);
         },
         initSideButtonUI: function() {
           let sideButtonContainer = document.getElementById("bfc-side-button-container");
@@ -3875,10 +3886,10 @@ System.register("./__entry.js", ['vue', 'pinia'], (function (exports, module) {
           sideButtonContainer = document.createElement("div");
           sideButtonContainer.id = "bfc-side-button-container";
           document.body.appendChild(sideButtonContainer);
-          const app = createApp(SideButton);
+          const app2 = createApp$1(SideButton);
           const pinia2 = window.__bfc_pinia || createPinia();
-          app.use(pinia2);
-          this.sideButtonVM = app.mount(sideButtonContainer);
+          app2.use(pinia2);
+          this.sideButtonVM = app2.mount(sideButtonContainer);
         },
         showPopup: function(data) {
           if (!this.popupVM) return;
@@ -3890,44 +3901,31 @@ System.register("./__entry.js", ['vue', 'pinia'], (function (exports, module) {
           }
         }
       };
-      const pinia = createPinia();
       const getStores = () => {
-        return __vitePreload(() => Promise.resolve().then(() => indexCi8M_Gyy), void 0 ).then((stores) => ({
+        return __vitePreload(() => Promise.resolve().then(() => indexC7O3m6C4), void 0 ).then((stores) => ({
           useClassificationStore: stores.useClassificationStore,
           useFloatingRecommendationStore: stores.useFloatingRecommendationStore,
           useSettingsStore: stores.useSettingsStore
         }));
       };
-      const App = {
+      const AppCoordinator = {
         isProcessing: false,
-        init: async function() {
-          this.initPinia();
+        init() {
           if (window.location.href.includes("space.bilibili.com")) {
             this.initSpacePage();
           } else if (window.location.href.includes("www.bilibili.com/video/")) {
             this.initVideoPageListeners();
           }
         },
-        // 新增：初始化 Pinia
-        initPinia: function() {
-          const tempDiv = document.createElement("div");
-          tempDiv.style.display = "none";
-          document.body.appendChild(tempDiv);
-          const { createApp: createApp2 } = Vue;
-          const app = createApp2({});
-          app.use(pinia);
-          app.mount(tempDiv);
-          window.__bfc_pinia = pinia;
-        },
-        initSpacePage: function() {
+        initSpacePage() {
           UIManager.init();
         },
-        initVideoPageListeners: async function() {
+        async initVideoPageListeners() {
           UIManager.initFloatingRecommendationUI();
           UIManager.initSideButtonUI();
           this.initRealtimeVideoDetection();
         },
-        initRealtimeVideoDetection: async function() {
+        async initRealtimeVideoDetection() {
           console.log("[BFC Debug] 初始化实时视频检测");
           const apiKey = GM.getValue("apiKey");
           if (!apiKey) {
@@ -3957,7 +3955,7 @@ System.register("./__entry.js", ['vue', 'pinia'], (function (exports, module) {
           setInterval(checkUrlChange, 2e3);
           console.log("[BFC Debug] 实时视频检测已启动");
         },
-        detectAndProcessVideo: async function() {
+        async detectAndProcessVideo() {
           console.log("[BFC Debug] 开始检测和处理视频");
           if (this.isProcessing) {
             console.log("[BFC Debug] 正在处理中，跳过检测");
@@ -3978,6 +3976,8 @@ System.register("./__entry.js", ['vue', 'pinia'], (function (exports, module) {
             return;
           }
           classificationStore.setLastVideoUrl(currentUrl);
+          this.isProcessing = true;
+          await this.processVideoForRecommendation(bvid);
         },
         async processVideoForRecommendation(bvid) {
           const stores = await getStores();
@@ -4044,11 +4044,20 @@ System.register("./__entry.js", ['vue', 'pinia'], (function (exports, module) {
           }
         }
       };
+      const pinia = createPinia();
+      const tempDiv = document.createElement("div");
+      tempDiv.style.display = "none";
+      document.body.appendChild(tempDiv);
+      const { createApp } = Vue;
+      const app = createApp({});
+      app.use(pinia);
+      app.mount(tempDiv);
+      window.__bfc_pinia = pinia;
       (async () => {
-        await App.init();
+        AppCoordinator.init();
       })();
 
-      const indexCi8M_Gyy = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+      const indexC7O3m6C4 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
         __proto__: null,
         useClassificationStore,
         useFloatingRecommendationStore,

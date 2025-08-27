@@ -19,7 +19,7 @@ export default defineConfig({
             '*://www.bilibili.com/video/*'
         ],
         icon: 'https://www.bilibili.com/favicon.ico',
-        connect: '*',
+        connect: ['api.bilibili.com', 'open.bigmodel.cn', '*'],
         grant: [
             'GM_addStyle',
             'GM_xmlhttpRequest',
