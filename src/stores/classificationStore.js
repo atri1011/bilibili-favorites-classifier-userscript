@@ -10,6 +10,14 @@ export const useClassificationStore = defineStore('classification', {
     forceReclassify: false,
     taskRunning: false,
     isPaused: false,
+    isStopped: false,
+    status: 'idle', // idle, running, paused, stopped
+    summary: {
+      success: 0,
+      skipped: 0,
+      failed: 0,
+      failedItems: []
+    },
     logs: [],
     resultsVisible: false,
     classificationResults: [],
